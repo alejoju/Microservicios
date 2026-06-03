@@ -45,6 +45,12 @@ mvnw verify
 
 El reporte se genera en `target/site/jacoco/index.html`.
 
+Consola para la DB en H2:
+
+```bash
+http://localhost:8090/h2-console
+```
+
 ## Ejemplos con curl
 
 ```bash

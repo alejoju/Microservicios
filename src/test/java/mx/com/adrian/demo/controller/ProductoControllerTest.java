@@ -1,7 +1,6 @@
 package mx.com.adrian.demo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import mx.com.adrian.demo.exception.GlobalExceptionHandler;
 import mx.com.adrian.demo.exception.ResourceNotFoundException;
 import mx.com.adrian.demo.model.ProductoRequestDTO;
@@ -9,13 +8,15 @@ import mx.com.adrian.demo.model.ProductoResponseDTO;
 import mx.com.adrian.demo.service.ProductoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -28,27 +29,24 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@WebMvcTest(ProductoController.class)
+@Import(GlobalExceptionHandler.class)
 class ProductoControllerTest {
 
+    @Autowired
     private MockMvc mockMvc;
-    private ProductoService productoService;
+
+    @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private ProductoService productoService;
+
     private ProductoResponseDTO responseDTO;
     private ProductoRequestDTO requestDTO;
 
     @BeforeEach
     void setUp() {
-        productoService = mock(ProductoService.class);
-        ProductoController controller = new ProductoController(productoService);
-        mockMvc = MockMvcBuilders
-                .standaloneSetup(controller)
-                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
-                .setControllerAdvice(new GlobalExceptionHandler())
-                .build();
-
-        objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-
         responseDTO = ProductoResponseDTO.builder()
                 .id(1L)
                 .nombre("Laptop")

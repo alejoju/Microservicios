@@ -7,7 +7,9 @@ package mx.com.adrian.demo.exception;
  */
 public class ResourceNotFoundException extends RuntimeException {
 
-    /**
+    private static final long serialVersionUID = 1L;
+
+	/**
      * Crea una excepción con un mensaje descriptivo del error.
      *
      * @param message descripción del recurso no encontrado.

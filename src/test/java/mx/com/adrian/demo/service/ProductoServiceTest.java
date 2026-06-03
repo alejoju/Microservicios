@@ -10,7 +10,6 @@ import mx.com.adrian.demo.service.impl.ProductoServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -92,14 +91,8 @@ class ProductoServiceTest {
         ProductoRequestDTO invalidDTO = new ProductoRequestDTO();
         invalidDTO.setNombre("AB");
 
-        when(mapper.toEntity(invalidDTO)).thenReturn(new Producto());
-
-        assertThrows(Exception.class, () -> {
-            Producto entity = mapper.toEntity(invalidDTO);
-            if (entity.getNombre() == null || entity.getNombre().length() < 3) {
-                throw new IllegalArgumentException("El nombre debe tener entre 3 y 100 caracteres");
-            }
-        });
+        assertThrows(IllegalArgumentException.class, () -> service.crearProducto(invalidDTO));
+        verify(repository, never()).save(any());
     }
 
     @Test

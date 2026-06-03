@@ -34,6 +34,7 @@ public class ProductoServiceImpl implements ProductoService {
     @Transactional
     public ProductoResponseDTO crearProducto(ProductoRequestDTO request) {
         log.info("Creando producto: {}", request.getNombre());
+        validarRequest(request);
         Producto producto = mapper.toEntity(request);
         producto = repository.save(producto);
         log.info("Producto creado con ID: {}", producto.getId());
@@ -61,6 +62,7 @@ public class ProductoServiceImpl implements ProductoService {
     @Transactional
     public ProductoResponseDTO actualizarProducto(Long id, ProductoRequestDTO request) {
         log.info("Actualizando producto ID: {}", id);
+        validarRequest(request);
         Producto producto = repository.findByIdAndActivoTrue(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con ID: " + id));
         mapper.updateEntity(request, producto);
@@ -98,5 +100,26 @@ public class ProductoServiceImpl implements ProductoService {
                 .stream()
                 .map(mapper::toResponseDTO)
                 .toList();
+    }
+
+    /**
+     * Valida los datos de entrada del producto antes de procesarlo.
+     *
+     * @param request DTO con los datos a validar.
+     * @throws IllegalArgumentException si algún campo no cumple las reglas de negocio.
+     */
+    private void validarRequest(ProductoRequestDTO request) {
+        if (request.getNombre() == null || request.getNombre().trim().length() < 3) {
+            throw new IllegalArgumentException("El nombre debe tener entre 3 y 100 caracteres");
+        }
+        if (request.getPrecio() == null || request.getPrecio().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("El precio debe ser un valor positivo");
+        }
+        if (request.getCantidadStock() == null || request.getCantidadStock() < 0) {
+            throw new IllegalArgumentException("La cantidad en stock no puede ser negativa");
+        }
+        if (request.getCategoria() == null || request.getCategoria().trim().isEmpty()) {
+            throw new IllegalArgumentException("La categoría es obligatoria");
+        }
     }
 }
