@@ -182,4 +182,17 @@ public class ProductoController {
             BigDecimal precioMax) {
         return ResponseEntity.ok(productoService.buscarPorRangoPrecio(precioMin, precioMax));
     }
+    
+    @GetMapping(value = "/buscar-descripcion", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Buscar por rango de precio", description = "Filtra productos activos cuyo precio esté entre precioMin y precioMax.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Lista de productos en el rango de precio",
+                content = @Content(schema = @Schema(implementation = List.class)))
+    })
+    public ResponseEntity<List<ProductoResponseDTO>> buscarnombre(
+            @RequestParam
+            @Parameter(description = "Descripción", example = "Lap", required = true)
+            String desc) {
+        return ResponseEntity.ok(productoService.buscarNombre(desc));
+    }
 }

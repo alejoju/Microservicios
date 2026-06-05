@@ -122,4 +122,13 @@ public class ProductoServiceImpl implements ProductoService {
             throw new IllegalArgumentException("La categoría es obligatoria");
         }
     }
+
+	@Override
+	public List<ProductoResponseDTO> buscarNombre(String desc) {
+		StringBuilder builder = new StringBuilder("%").append(desc).append("%");
+		return repository.findByDescripcion(builder.toString().toUpperCase())
+                .stream()
+                .map(mapper::toResponseDTO)
+                .toList();
+	}
 }

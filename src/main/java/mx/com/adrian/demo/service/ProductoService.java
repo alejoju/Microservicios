@@ -74,4 +74,6 @@ public interface ProductoService {
      * @return lista de productos activos dentro del rango.
      */
     List<ProductoResponseDTO> buscarPorRangoPrecio(BigDecimal min, BigDecimal max);
+    
+    List<ProductoResponseDTO> buscarNombre(String desc);
 }
