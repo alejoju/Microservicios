@@ -23,6 +23,16 @@ spring:
       ddl-auto: create-drop
     show-sql: true
     defer-datasource-initialization: true
+    
+    
+  config:
+    import: "optional:configserver:${SPRING_CLOUD_CONFIG_URI:http://localhost:8888}" # Toma de variable de entorno
+
+  cloud:
+    config:
+      uri: ${SPRING_CLOUD_CONFIG_URI:}
+      profile: ${SPRING_CLOUD_CONFIG_PROFILE:PRODUCTOS-API-DEV}
+      label: ${SPRING_CLOUD_CONFIG_LABEL:}
 
 server:
   port: 8090
@@ -40,6 +50,6 @@ springdoc:
   
   
 jwt:
-  secret: "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970"
+  secret: ${JWT_SECRET}
   expiration: 3600000           # 1 hora
   refresh-expiration: 86400000  # 24 horas

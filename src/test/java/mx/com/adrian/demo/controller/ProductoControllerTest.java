@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
@@ -46,6 +47,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 )
 @Import(GlobalExceptionHandler.class)
 @AutoConfigureMockMvc(addFilters = false)
+@TestPropertySource(properties = {
+    "spring.config.import=",
+    "spring.cloud.config.enabled=false",
+    "jwt.secret=miClaveSecretaParaPruebas"
+})
 class ProductoControllerTest {
 
     @Autowired
