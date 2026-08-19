@@ -45,7 +45,8 @@ public class SecurityConfig {
         	    	    "/producer/v3/api-docs/**",
         	    	    "/producer/api-docs/**",
         	    	    "/h2-console/**",
-        	    	    "/swagger-ui/**",      // add these for direct access
+        	    	    "/swagger-ui/**",
+        	    	    "/swagger-ui.html",
         	    	    "/v3/api-docs/**",
         	    	    "/api-docs/**"
         	    	).permitAll()

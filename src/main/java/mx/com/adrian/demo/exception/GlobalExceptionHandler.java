@@ -2,6 +2,8 @@ package mx.com.adrian.demo.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -94,4 +96,28 @@ public class GlobalExceptionHandler {
         body.put("path", request.getDescription(false));
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Map<String, Object>> handleAuthenticationException(AuthenticationException ex, WebRequest request) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.UNAUTHORIZED.value()); // 401
+        body.put("error", "Unauthorized");
+        body.put("message", "Credenciales inválidas o no autenticado. " + ex.getMessage());
+        body.put("path", request.getDescription(false));
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
+
+    // 2. Captura específica para 403 (Prohibido / Sin permisos para acceder al recurso)
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.FORBIDDEN.value()); // 403
+        body.put("error", "Forbidden");
+        body.put("message", "No tienes permisos para acceder a este recurso.");
+        body.put("path", request.getDescription(false));
+        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+    }
+    
 }

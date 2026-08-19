@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import mx.com.adrian.demo.entity.UsuarioEntity;
-import mx.com.adrian.demo.entity.UsuarioEntity.RolUsuario;
 import mx.com.adrian.demo.repository.UsuarioJpaRepository;
 
 @Service
@@ -15,15 +14,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     public CustomUserDetailsService(UsuarioJpaRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
     }
+    
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    	
-    	System.out.println("" + usuarioRepository.findAll().size());
-    	
-    	usuarioRepository.findAll().forEach(user -> {
-    		System.out.println("" + user.getNombreCompleto());
-    	});
-    	
         UsuarioEntity usuario = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
         
